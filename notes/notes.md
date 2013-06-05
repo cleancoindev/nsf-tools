@@ -4,9 +4,9 @@
 
 NSF is basically just raw sound data (music / sound code) with a small
 header.  The music can be played using a
-[6502](ihttp://en.wikipedia.org/wiki/MOS_Technology_6502) emulator: load
-the data into the right part of the address space, initialize, and run.
-The header format:
+[6502](http://en.wikipedia.org/wiki/MOS_Technology_6502) emulator: load the
+data into the right part of the address space, initialize, and run.  The
+header format:
 
 | Offset | Length | Type   | Meaning                                            |
 | ------ | ------ | ------ | -------------------------------------------------- |
@@ -113,7 +113,13 @@ Interpretting the values:
 | 80     | ...    | ...            | begin music data                           |
 
 Apparently this header format was inspired by the [PSID
-format](http://cpansearch.perl.org/src/LALA/Audio-SID-3.11/SID_file_format.txt) for
-[Commodore 64](http://en.wikipedia.org/wiki/Commodore_64) (C64) for C64 music / sound.
+format](http://cpansearch.perl.org/src/LALA/Audio-SID-3.11/SID_file_format.txt)
+for [Commodore 64](http://en.wikipedia.org/wiki/Commodore_64) (C64) for C64
+music / sound.  The NES, C64, and early Apple computers all used the
+[6502](http://en.wikipedia.org/wiki/MOS_Technology_6502) for their CPU.
+Nintendo use the [Ricoh 2A03](http://en.wikipedia.org/wiki/2A03) variant in
+particular, which provided 22 additional memory for sound, etc.  A
+community of enthusiast has developed [2A03 technical
+documentation](http://nesdev.com/2A03%20technical%20reference.txt).
 
 ### Loading a Tune
