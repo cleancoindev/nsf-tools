@@ -9,3 +9,5 @@
 [nullsleep MCK/MML Guide](http://www.nullsleep.com/treasure/mck_guide/)
 
 [6502 Resources](http://www.6502.org/)
+
+NSFs in samples/ from [Zophar's Domain](http://www.zophar.net/music/nsf.html)
