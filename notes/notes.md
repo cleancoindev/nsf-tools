@@ -71,7 +71,7 @@ $ xxd -cols 8 Tetrix.nsf | head -n 17
 Interpretting the values:
 
 | Offset | Length | Content        | Meaning                                    |
-|-------------------------------------------------------------------------------|
+| ------ | ------ | -------------- | ------------------------------------------ |
 | 00     | 5      | 4e 45 53 4d 1a | "NESM\x1a", denotes NES sound format file  |
 | 05     | 1      | 01             | 1, version number                          |
 | 06     | 1      | 1f             | 57, total number of songs                  |
