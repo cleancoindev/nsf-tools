@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import bread as b
 import sys
 
@@ -5,8 +7,7 @@ def hex_array(x):
     return str(map(hex, x))
 
 nsf_header = [
-    ('magic_number', b.array(5, b.byte),
-     {"str_format": hex_array}),
+    ('magic_number', b.array(5, b.byte), {"str_format": hex_array}),
     ('version', b.byte),
     ('total_songs', b.byte),
     ('starting_song', b.byte),
@@ -33,6 +34,10 @@ nsf_header = [
     (b.padding(32))
 ]
 
-with open(sys.argv[1], 'r') as fp:
-    header = b.parse(fp, nsf_header)
-    print header
+def main():
+  with open(sys.argv[1], 'r') as fp:
+      header = b.parse(fp, nsf_header)
+      print header
+
+if __name__ == "__main__":
+  main()
