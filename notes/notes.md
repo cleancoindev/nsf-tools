@@ -10,7 +10,7 @@ header format:
 
 | Offset | Length | Type   | Meaning                                            |
 | ------ | ------ | ------ | -------------------------------------------------- |
-| 0000   | 5      | STRING | "NESM\x1a" = 4e 45 53 4d 1a                        |
+| 0000   | 5      | STRING | magic number: "NESM\x1a" = 4e 45 53 4d 1a          |
 | 0005   | 1      | BYTE   | version number (currently 01h)                     |
 | 0006   | 1      | BYTE   | total number of songs                              |
 | 0007   | 1      | BYTE   | starting song                                      |
@@ -45,7 +45,7 @@ Song, artist, and copyright STRINGs are null terminated.
 
 NTSC and PAL speed are in 1/1000000th sec ticks.
 
-We can examine the first 256 bytes of `Tetris.nsf` for an example header:
+We can examine the first 128 bytes of `Tetris.nsf` for an example header:
 
 ```
 $ xxd -cols 8 Tetrix.nsf | head -n 17
@@ -87,7 +87,7 @@ Interpretting the values:
 |        |        | 00 00 00 00    |                                            |
 |        |        | 00 00 00 00    |                                            |
 |        |        | 00 00 00 00    |                                            |
-| 2e     | 32     | 3c 3f 3e 00    | "<?=", artist name                         |
+| 2e     | 32     | 3c 3f 3e 00    | "<?>", artist name                         |
 |        |        | 00 00 00 00    |                                            |
 |        |        | 00 00 00 00    |                                            |
 |        |        | 00 00 00 00    |                                            |
