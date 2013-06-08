@@ -3,10 +3,11 @@
 import bread as b
 import sys
 
-def hex_array(x):
+class NSF:
+  def hex_array(x):
     return str(map(hex, x))
 
-nsf_header = [
+  hdr_spec = [
     ('magic_number', b.array(5, b.byte), {"str_format": hex_array}),
     ('version', b.byte),
     ('total_songs', b.byte),
@@ -20,8 +21,7 @@ nsf_header = [
     ('ntsc_speed', b.uint16),
     ('bankswitch_init', b.array(8, b.byte), {"str_format": hex_array}),
     ('pal_speed', b.uint16),
-    ('ntsc', b.boolean),
-    ('pal', b.boolean),
+    ('tv_std', b.boolean, {"str_format": lambda x: "PAL" if x else "NTSC"}),
     ('ntsc_and_pal', b.boolean),
     (b.padding(6)),
     ('vrc6', b.boolean),
@@ -32,12 +32,17 @@ nsf_header = [
     ('fme07', b.boolean),
     (b.padding(2)),
     (b.padding(32))
-]
+  ]
+
+  def __init__(self, path):
+    with open(path, 'r') as f:
+      d = f.read()
+    self.path = path
+    self.hdr  = b.parse(d[0:128], NSF.hdr_spec)
+    self.code = d[128:]
 
 def main():
-  with open(sys.argv[1], 'r') as fp:
-      header = b.parse(fp, nsf_header)
-      print header
+  print NSF(sys.argv[1]).hdr
 
 if __name__ == "__main__":
   main()
