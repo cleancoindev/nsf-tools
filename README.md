@@ -9,9 +9,7 @@ After cloning, point the `NSF_TOOLS` environment variable to the repo:
 
 ```sh
 $ git clone https://github.com/ztatlock/nsf-tools.git
-$ cd nsf-tools
-$ echo "export NSF_TOOLS=$(pwd)" >> ~/.bashrc
-$ cd ..
+$ echo "export NSF_TOOLS=$(pwd)/nsf-tools" >> ~/.bashrc
 ```
 
 NSF Tools also depend on [bread](https://github.com/alexras/bread) and
@@ -20,6 +18,7 @@ NSF Tools also depend on [bread](https://github.com/alexras/bread) and
 ```sh
 $ git clone https://github.com/alexras/bread.git
 $ echo "export PYTHONPATH=$(pwd)/bread/bread:$PYTHONPATH" >> ~/.bashrc
+
 $ pip insall py65
 ```
 
