@@ -17,17 +17,20 @@ def basename(path):
   bn = os.path.splitext(fn)[0]
   return bn
 
-def mkdir(d):
+def ensuredir(d):
   if os.path.exists(d):
-    if ARGS.force:
-      if os.path.isdir(d):
-        pass # everything ok
-      else:
-        error('"%s" is not a directory' % d)
+    if os.path.isdir(d):
+      return # everything ok
     else:
-      error('"%s" already exists, to overwrite use --force' % d)
+      error('"%s" exists, but is not a directory' % d)
   else:
     os.makedirs(d)
+
+def logF(path, x):
+  if ARGS.log:
+    ensuredir(os.path.dirname(path))
+    with open(path, 'w') as f:
+      f.write(x)
 
 def hex_array(x):
   return str(map(hex, x))
@@ -61,37 +64,33 @@ nsf_head_spec = \
 
 def scopetune(path):
   name = basename(path)
-  tout = os.path.join(ARGS.out, name)
-  mkdir(tout)
-
   with open(path, 'r') as f:
     bin_head = f.read(128)
     bin_code = f.read()
-
-  with open(os.path.join(tout, 'head.bin'), 'w') as f:
-    f.write(bin_head)
-  with open(os.path.join(tout, 'code.bin'), 'w') as f:
-    f.write(bin_code)
-
   head = b.parse(bin_head, nsf_head_spec)
   head.add_key('code_size', len(bin_code))
-  with open(os.path.join(tout, 'head.txt'), 'w') as f:
-    f.write(str(head))
+  head.add_key('name', name)
+
+  if ARGS.log:
+    tlog = os.path.join(ARGS.log, name)
+    logF(os.path.join(tlog, 'head.bin'), bin_head)
+    logF(os.path.join(tlog, 'code.bin'), bin_code)
+    logF(os.path.join(tlog, 'head.txt'), str(head))
+    # TODO disassemble code.bin
+
+  return head
 
 def main():
   global ARGS
   ap = argparse.ArgumentParser(description='Analyze NSF chiptues.')
   ap.add_argument('tunes', metavar='tune', nargs='+',
                   help='tune file to analyze')
-  ap.add_argument('-o', '--out', default='nsf-scope-out',
-                  help='place results in OUT/')
-  ap.add_argument('-f', '--force', action='store_true',
-                  help='overwrite any previous results')
+  ap.add_argument('-l', '--log',
+                  help='log intermediate steps in LOG/')
   ARGS = ap.parse_args()
 
-  mkdir(ARGS.out)
-  for t in ARGS.tunes:
-    scopetune(t)
+  props = [ scopetune(t) for t in ARGS.tunes ]
+  # TODO csv props
 
 if __name__ == '__main__':
   main()
