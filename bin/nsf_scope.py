@@ -62,23 +62,53 @@ nsf_head_spec = \
   , (b.padding(32))
   ]
 
+class Instr:
+  def __init__(self, instr, amode=None, opand=[]):
+    self.instr = instr
+    self.amode = amode
+    self.opand = opand
+
+# do not think about efficiency
+# TODO learn addressing modes and finish table
+disasm_tab = \
+  { 0x00: lambda mem, off:
+      (1, Instr('BRK'))
+  , 0x01: lambda mem, off:
+      (2, Instr('ORA', 'zp,X', [mem[off+1]]))
+  }
+
+def disasm(mem, lo=0, hi=None):
+  if hi == None:
+    hi = len(mem)
+  instrs = []
+  while lo < hi:
+    isize, instr = disasm_tab[mem[lo]](mem, lo)
+    lo += isize
+    instrs.append(instr)
+  return instrs
+
+class NSF:
+  def __init__(self, name, head, code):
+    self.name = name
+    self.head = head
+    self.code = code
+
 def scopetune(path):
   name = basename(path)
   with open(path, 'r') as f:
     bin_head = f.read(128)
-    bin_code = f.read()
+    bin_code = map(ord, f.read())
   head = b.parse(bin_head, nsf_head_spec)
-  head.add_key('code_size', len(bin_code))
-  head.add_key('name', name)
+  code = disasm(bin_code)
 
   if ARGS.log:
     tlog = os.path.join(ARGS.log, name)
     logF(os.path.join(tlog, 'head.bin'), bin_head)
     logF(os.path.join(tlog, 'code.bin'), bin_code)
     logF(os.path.join(tlog, 'head.txt'), str(head))
-    # TODO disassemble code.bin
+    logF(os.path.join(tlog, 'code.asm'), str(code))
 
-  return head
+  return NSR(name, head, code)
 
 def main():
   global ARGS
