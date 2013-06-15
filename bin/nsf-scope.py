@@ -74,11 +74,9 @@ def scopetune(path):
     f.write(bin_code)
 
   head = b.parse(bin_head, nsf_head_spec)
+  head.add_key('code_size', len(bin_code))
   with open(os.path.join(tout, 'head.txt'), 'w') as f:
     f.write(str(head))
-    f.write('# extras\n')
-    f.write('code_size: %d\n' % len(bin_code))
-    f.write('last_code_addr: 0x%x\n' % (head.load_addr + len(bin_code) - 1))
 
 def main():
   global ARGS
