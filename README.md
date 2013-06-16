@@ -3,22 +3,20 @@
 Very experimental and hacky tools to pick out interesting features of
 chiptunes.
 
-## INSTALL
-
-After cloning, point the `NSF_TOOLS` environment variable to the repo:
+## Setup
 
 ```sh
-$ git clone https://github.com/ztatlock/nsf-tools.git
-$ echo "export NSF_TOOLS=$(pwd)/nsf-tools" >> ~/.bashrc
-```
-
-NSF Tools also depend on [bread](https://github.com/alexras/bread) and
-[py65](https://github.com/mnaberez/py65):
-
-```sh
+# fetch the bread library and update PYTHONPATH
 $ git clone https://github.com/alexras/bread.git
 $ echo "export PYTHONPATH=$(pwd)/bread/bread:$PYTHONPATH" >> ~/.bashrc
 
+$ git clone https://github.com/ztatlock/nsf-tools.git
+```
+
+[py65](https://github.com/mnaberez/py65) is also very useful for
+understanding 6502 binaries.
+
+```sh
 $ pip insall py65
 ```
 
