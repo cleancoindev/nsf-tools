@@ -81,7 +81,20 @@ class Instr:
       a = '0x%04x' % self.opand
     else:
       error('bad instr size %d' % self.size)
-    return '%-3s (%-4s) %s' % (self.op, self.amode, a)
+    return '%-3s  (%4s)  %s' % (self.op, self.amode, a)
+
+class Code:
+  def __init__(self, load_addr, instrs):
+    self.load_addr = load_addr
+    self.instrs = instrs
+
+  def __str__(self):
+    s = ''
+    off = self.load_addr
+    for i in self.instrs:
+      s += '0x%04x  %s\n' % (off, i)
+      off += i.size
+    return s
 
 # http://www.6502.org/tutorials/6502opcodes.html
 disasm_tab = \
@@ -238,7 +251,7 @@ disasm_tab = \
   , 0xF0: ('BEQ', 'REL',  2)
   }
 
-def disasm(mem, lo=0, hi=None):
+def disasm(mem, load_addr, lo=0, hi=None):
   if hi == None:
     hi = len(mem)
   instrs = []
@@ -257,7 +270,7 @@ def disasm(mem, lo=0, hi=None):
       error('bad instr size %d' % self.size)
     instrs.append(Instr(op, amode, opand, size))
     lo += size
-  return instrs
+  return Code(load_addr, instrs)
 
 class NSF:
   def __init__(self, name, head, code):
@@ -271,14 +284,14 @@ def scopetune(path):
     bin_head = f.read(128)
     bin_code = f.read()
   head = b.parse(bin_head, nsf_head_spec)
-  code = disasm(map(ord, bin_code))
+  code = disasm(map(ord, bin_code), head.load_addr)
 
   if ARGS.log:
     tlog = os.path.join(ARGS.log, name)
     logF(os.path.join(tlog, 'head.bin'), bin_head)
     logF(os.path.join(tlog, 'code.bin'), bin_code)
     logF(os.path.join(tlog, 'head.txt'), str(head))
-    logF(os.path.join(tlog, 'code.asm'), '\n'.join([str(i) for i in code]))
+    logF(os.path.join(tlog, 'code.asm'), str(code))
 
   return NSF(name, head, code)
 
